@@ -1,0 +1,14 @@
+6 7
+0 54894 17936 Machine de Turing
+1 85044 5086 Turing complet
+2 1658 3489 Java
+3 6923 39725 Langage de programmation
+4 38779 224171 Joker 
+5 143219 3962906 Batman
+0 1
+1 0
+1 2
+2 3
+3 2
+4 5
+5 4
