@@ -1,3 +1,4 @@
+package task;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -6,11 +7,11 @@ import java.io.IOException;
 public class LireFichier {
 
   private static String FICHIER = "WikipediaL.txt";
-  private Task1 task;
+  private Task task;
   
   
 
-  public LireFichier(Task1 task) {
+  public LireFichier(Task task) {
     super();
     this.task = task;
   }
@@ -35,14 +36,14 @@ public class LireFichier {
         }
         PageWikipedia pageWiki = new PageWikipedia(identifiantProjet, identifiantWikipedia, taille, titre);
         Sommet sommet = new Sommet(pageWiki);
-        task.sommets.put(identifiantProjet, sommet);
-        task.titres.put(titre, sommet);
+        task.putSommet(sommet);
+        task.putTitre(sommet);
       }
       for(int i = 0; i < m; i++) {
        String[] lien = br.readLine().split(" ");
        int sommetDepart = Integer.valueOf(lien[0]);
        int sommetArrivee = Integer.valueOf(lien[1]);
-       task.sommets.get(sommetDepart).arcsSortants.add(task.sommets.get(sommetArrivee));
+       task.getSommet(sommetDepart).ajouterArc(task.getSommet(sommetArrivee));
       }
     } catch (IOException ioe) {
       ioe.printStackTrace();

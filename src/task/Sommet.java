@@ -1,8 +1,11 @@
+package task;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Sommet {
 
-  public HashSet<Sommet> arcsSortants = new HashSet<Sommet>();
+  private Set<Sommet> arcsSortants = new HashSet<Sommet>();
   private PageWikipedia pageWiki;
   
   public Sommet(PageWikipedia pageWiki) {
@@ -16,6 +19,14 @@ public class Sommet {
 
   public void setPageWiki(PageWikipedia pageWiki) {
     this.pageWiki = pageWiki;
+  }
+  
+  public boolean ajouterArc(Sommet sommet) {
+    return this.arcsSortants.add(sommet);
+  }
+  
+  public Set<Sommet> getArcs() {
+    return Collections.unmodifiableSet(this.arcsSortants);
   }
 
   @Override
