@@ -1,4 +1,7 @@
+import java.util.List;
+
 import task.LireFichier;
+import task.Sommet;
 import task.Task;
 import task.Task1;
 import util.Util;
@@ -20,6 +23,7 @@ public class Main {
   }
 
   private static void menuPrincipal() {
+    scanner = new java.util.Scanner(System.in);
     System.out.println("--------------------------------------------------------");
     System.out.println("          Bienvenue sur le nouveau Wikipedia");
     System.out.println("--------------------------------------------------------");
@@ -45,7 +49,15 @@ public class Main {
       System.out.println("Veuilliez entrer le sommet d'arrivée : ");
       sommetArrivee = scanner.nextLine();
     } while (!task.existe(sommetArrivee));
-    task.affichage();
+    List<Sommet> chemin = task.algorithme(task.getSommetByString(sommetDepart), task.getSommetByString(sommetArrivee));
+    if(chemin == null) {
+      System.out.println("Pas de chemin trouvé");
+    } else {
+      System.out.println("Voici le chemin le plus court : ");
+      for (int i = 0; i < chemin.size(); i++) {
+        System.out.println(i + ") " + chemin.get(i).getPageWiki().getTitre());
+      }
+    }
   }
 
   private static void initialisationProgramme() {

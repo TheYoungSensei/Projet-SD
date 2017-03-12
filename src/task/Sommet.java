@@ -1,11 +1,11 @@
 package task;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class Sommet {
 
-  private Set<Sommet> arcsSortants = new HashSet<Sommet>();
+  private List<Sommet> arcsSortants = new ArrayList<Sommet>();
   private PageWikipedia pageWiki;
   
   public Sommet(PageWikipedia pageWiki) {
@@ -25,8 +25,8 @@ public class Sommet {
     return this.arcsSortants.add(sommet);
   }
   
-  public Set<Sommet> getArcs() {
-    return Collections.unmodifiableSet(this.arcsSortants);
+  public List<Sommet> getArcs() {
+    return Collections.unmodifiableList(this.arcsSortants);
   }
 
   @Override
