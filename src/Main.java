@@ -1,4 +1,7 @@
+import java.util.ArrayList;
+
 import task.LireFichier;
+import task.Sommet;
 import task.Task;
 import task.Task1;
 import util.Util;
@@ -39,13 +42,20 @@ public class Main {
     do {
       System.out.println("Veuillez entrer un sommet de départ :");
       sommetDepart = scanner.nextLine();
-    } while (!task.existe(sommetDepart));
+    } while (task.getSommetByTitre(sommetDepart)==null);
+    task.setSommetDepart(task.getSommetByTitre(sommetDepart));
     String sommetArrivee;
     do {
       System.out.println("Veuilliez entrer le sommet d'arrivée : ");
       sommetArrivee = scanner.nextLine();
-    } while (!task.existe(sommetArrivee));
+    } while (task.getSommetByTitre(sommetDepart)==null);
+    task.setSommetArrivee(task.getSommetByTitre(sommetArrivee));
     task.affichage();
+    ArrayList<Sommet> chemin = task.algorithmeDijkstra();
+    //affichage Chemin
+    for(int i =0; i< chemin.size();i++){
+    	System.out.println(i+". "+chemin.get(i).getPageWiki().toString());
+    }
   }
 
   private static void initialisationProgramme() {

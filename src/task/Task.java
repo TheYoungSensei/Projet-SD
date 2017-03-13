@@ -1,10 +1,15 @@
 package task;
 
-public interface Task {
+import java.util.ArrayList;
 
-  public abstract boolean putSommet(Sommet sommet);
-  public abstract boolean putTitre(Sommet sommet);
-  public abstract Sommet getSommet(Integer i);
-  public abstract boolean existe(String s);
+public interface Task {
+	
+  public abstract void putSommetInit(Sommet sommet);	
+
+  public abstract Sommet getSommetById(Integer i);
+  public abstract Sommet getSommetByTitre(String s);
+  public abstract boolean setSommetDepart(Sommet s);
+  public abstract boolean setSommetArrivee(Sommet s);
   public abstract void affichage();
+  public abstract ArrayList<Sommet> algorithmeDijkstra();
 }

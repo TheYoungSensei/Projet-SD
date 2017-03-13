@@ -36,14 +36,13 @@ public class LireFichier {
         }
         PageWikipedia pageWiki = new PageWikipedia(identifiantProjet, identifiantWikipedia, taille, titre);
         Sommet sommet = new Sommet(pageWiki);
-        task.putSommet(sommet);
-        task.putTitre(sommet);
+        task.putSommetInit(sommet);
       }
       for(int i = 0; i < m; i++) {
        String[] lien = br.readLine().split(" ");
        int sommetDepart = Integer.valueOf(lien[0]);
        int sommetArrivee = Integer.valueOf(lien[1]);
-       task.getSommet(sommetDepart).ajouterArc(task.getSommet(sommetArrivee));
+       task.getSommetById(sommetDepart).ajouterArc(task.getSommetById(sommetArrivee));
       }
     } catch (IOException ioe) {
       ioe.printStackTrace();
