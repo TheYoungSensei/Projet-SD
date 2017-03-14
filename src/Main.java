@@ -12,9 +12,11 @@ public class Main {
   private static Task task;
 
   public static void main(String[] args) {
-    initialisationProgramme();
+  
     char boucle;
     do {
+      initialisationProgramme();
+      task.affichage();
       menuPrincipal();
       System.out.println("Voulez vous continuer ? (O/N)");
       boucle = scanner.next().charAt(0);
@@ -27,6 +29,7 @@ public class Main {
     System.out.println("          Bienvenue sur le nouveau Wikipedia");
     System.out.println("--------------------------------------------------------");
     System.out.println("1. Calculer le plus court chemin d'un sommet à un autre");
+    scanner = new java.util.Scanner(System.in);
     int choix = Integer.valueOf(scanner.nextLine());
     switch (choix) {
       case 1:
@@ -50,12 +53,17 @@ public class Main {
       sommetArrivee = scanner.nextLine();
     } while (task.getSommetByTitre(sommetDepart)==null);
     task.setSommetArrivee(task.getSommetByTitre(sommetArrivee));
-    task.affichage();
     ArrayList<Sommet> chemin = task.algorithmeDijkstra();
-    //affichage Chemin
-    for(int i =0; i< chemin.size();i++){
-    	System.out.println(i+". "+chemin.get(i).getPageWiki().toString());
+    if(chemin == null){
+    	System.out.println("Aucun chemin entre les deux pages !");
     }
+    //affichage Chemin
+    else{
+		 for(int i =0; i< chemin.size();i++){
+		    	System.out.println(i+". "+chemin.get(i).getPageWiki().getTitre());
+		    }
+    }
+   
   }
 
   private static void initialisationProgramme() {
