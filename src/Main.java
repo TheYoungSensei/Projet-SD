@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.List;
 
 import task.LireFichier;
 import task.Sommet;
@@ -53,7 +53,7 @@ public class Main {
       sommetArrivee = scanner.nextLine();
     } while (task.getSommetByTitre(sommetDepart)==null);
     task.setSommetArrivee(task.getSommetByTitre(sommetArrivee));
-    ArrayList<Sommet> chemin = task.algorithmeDijkstra();
+    List<Sommet> chemin = task.algorithmeDijkstra();
     if(chemin == null){
     	System.out.println("Aucun chemin entre les deux pages !");
     }
@@ -62,6 +62,7 @@ public class Main {
 		 for(int i =0; i< chemin.size();i++){
 		    	System.out.println(i+". "+chemin.get(i).getPageWiki().getTitre());
 		    }
+		 System.out.println("Il vous a fallu : " + task.getPoidsTotal() + " kb pour effectuer cette recherche");
     }
    
   }

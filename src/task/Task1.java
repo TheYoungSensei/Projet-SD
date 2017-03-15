@@ -2,7 +2,8 @@ package task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.SortedMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 
 public class Task1 implements Task {
@@ -17,8 +18,13 @@ public class Task1 implements Task {
   private Sommet sommetDepart;
   private Sommet sommetArrivee;
   
+  private int poidsTotal;
   
-  public void affichage() {
+  public int getPoidsTotal() {
+	return poidsTotal;
+}
+
+public void affichage() {
     for(Sommet sommet : hashTitres.values()) {
       System.out.println(sommet.getPageWiki().getTitre());
       for(Sommet som : sommet.getArcs()) {
@@ -27,14 +33,14 @@ public class Task1 implements Task {
     }
   }
   
-  public ArrayList<Sommet> algorithmeDijkstra() {
+  public List<Sommet> algorithmeDijkstra() {
 	  Sommet sommetCourant = this.sommetDepart;
 	  setSommetsNonAtteints.remove(sommetCourant);
-	  modifyPoids(sommetCourant,0, hashSommetPoids.get(sommetCourant));
+	  modifyPoids(sommetCourant, 0, hashSommetPoids.get(sommetCourant));
 	  for(Sommet sommetFils: sommetCourant.getArcs()){
 		  if(!setSommetsNonAtteints.contains(sommetFils)) continue;
-		  if(hashSommetPoids.get(sommetCourant) +1 < hashSommetPoids.get(sommetFils) || hashSommetPoids.get(sommetFils)==-1){
-			  modifyPoids(sommetFils, hashSommetPoids.get(sommetCourant)+1, hashSommetPoids.get(sommetFils));
+		  if(hashSommetPoids.get(sommetCourant) + sommetFils.getPageWiki().getTaille() < hashSommetPoids.get(sommetFils) || hashSommetPoids.get(sommetFils)==Integer.MAX_VALUE-1){
+			  modifyPoids(sommetFils, hashSommetPoids.get(sommetCourant)+ sommetFils.getPageWiki().getTaille(), hashSommetPoids.get(sommetFils));
 			  hashAntecedents.put(sommetFils, sommetCourant);
 		  }
 	  }
@@ -43,11 +49,10 @@ public class Task1 implements Task {
 		  if(sommetCourant == null) {
 			  return null;
 		  }
-		  setSommetsNonAtteints.remove(sommetCourant);
 		  for(Sommet sommetFils: sommetCourant.getArcs()){
 			  if(!setSommetsNonAtteints.contains(sommetFils)) continue;
-			  if(hashSommetPoids.get(sommetCourant) +1 < hashSommetPoids.get(sommetFils) || hashSommetPoids.get(sommetFils)==-1){
-				  modifyPoids(sommetFils, hashSommetPoids.get(sommetCourant)+1,hashSommetPoids.get(sommetFils));
+			  if(hashSommetPoids.get(sommetCourant) + sommetFils.getPageWiki().getTaille() < hashSommetPoids.get(sommetFils) || hashSommetPoids.get(sommetFils)==Integer.MAX_VALUE-1){
+				  modifyPoids(sommetFils, hashSommetPoids.get(sommetCourant) + sommetFils.getPageWiki().getTaille(),hashSommetPoids.get(sommetFils));
 				  hashAntecedents.put(sommetFils, sommetCourant);
 			  }
 		  }
@@ -55,34 +60,27 @@ public class Task1 implements Task {
 	  if(!sommetCourant.equals(sommetArrivee))
 		  return null;
 	  else{
-		  ArrayList<Sommet> cheminTemp = new ArrayList<Sommet>();
-		  cheminTemp.add(sommetCourant);
+		  this.poidsTotal = hashSommetPoids.get(sommetCourant);
+		  LinkedList<Sommet> cheminTemp = new LinkedList<Sommet>();
+		  cheminTemp.push(sommetCourant);
 		  while(!sommetCourant.equals(sommetDepart)){
+			  if(hashAntecedents.get(sommetCourant) == null) {
+				  return null;
+			  }
 			  sommetCourant =hashAntecedents.get(sommetCourant);
-			  cheminTemp.add(sommetCourant);
+			  cheminTemp.push(sommetCourant);
 		  }
-		  ArrayList<Sommet> chemin = new ArrayList<Sommet>();
-		  for(int i= cheminTemp.size()-1; i>=0; i--){
-			  chemin.add(cheminTemp.get(i));
-		  }
-		  return chemin;
-		  
+		  return cheminTemp;
 	  }
   }
   
   private Sommet sommetPoidsPlusFaibleNonParcouru(){
-	  for(ArrayList<Sommet> l : this.hashPoidsSommets.values()){
-		  if(hashSommetPoids.get(l.get(0)) ==-1) continue;
-		  for(int i=0;i < l.size(); i++){
-			  if(setSommetsNonAtteints.contains(l.get(i))){
-				  System.out.println("yoyoyoyoy"+hashSommetPoids.get(l.get(i)));
-				  Sommet s =l.remove(i);
-				  if(l.isEmpty()) hashPoidsSommets.remove(hashSommetPoids.get(s));
-				  return s;
-			  }	  
-		  }	  
-	  }
-	  return null;
+	  ArrayList<Sommet> sommets = this.hashPoidsSommets.firstEntry().getValue();
+	  Sommet s = sommets.remove(0);
+	  if(sommets.isEmpty())
+		  this.hashPoidsSommets.remove(hashSommetPoids.get(s));
+	  this.setSommetsNonAtteints.remove(s);
+	  return s;
   }
 
 
@@ -154,23 +152,20 @@ public class Task1 implements Task {
 
 	private void putSommetInHashTitre(Sommet sommet) {
 		this.hashTitres.put(sommet.getPageWiki().getTitre(), sommet);
-		
 	}
 
 
 	private void putSommetInHashSommetId(Sommet sommet) {
 		this.hashSommetId.put(sommet.getPageWiki().getIdentifiantProjet(), sommet);
-		
 	}
 		
 	 @Override
 	public void putSommetInit(Sommet sommet) {
 		 putSommetInSetNonAtteints(sommet);
 		 putSommetInHashAntecedents(sommet, null);
-		 modifyPoids(sommet, -1, -2);
+		 modifyPoids(sommet, Integer.MAX_VALUE-1, Integer.MAX_VALUE);
 		 putSommetInHashTitre(sommet);
-		 putSommetInHashSommetId(sommet);
-		
+		 putSommetInHashSommetId(sommet);		
 	}
 
 

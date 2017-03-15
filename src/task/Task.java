@@ -1,6 +1,6 @@
 package task;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Task {
 	
@@ -11,5 +11,6 @@ public interface Task {
   public abstract boolean setSommetDepart(Sommet s);
   public abstract boolean setSommetArrivee(Sommet s);
   public abstract void affichage();
-  public abstract ArrayList<Sommet> algorithmeDijkstra();
+  public abstract List<Sommet> algorithmeDijkstra();
+  public abstract int getPoidsTotal();
 }
