@@ -40,6 +40,9 @@ public class Task1 implements Task {
 	  }
 	  while(!sommetCourant.equals(sommetArrivee) && !setSommetsNonAtteints.isEmpty() ){
 		  sommetCourant = sommetPoidsPlusFaibleNonParcouru();
+		  if(sommetCourant == null) {
+			  return null;
+		  }
 		  setSommetsNonAtteints.remove(sommetCourant);
 		  for(Sommet sommetFils: sommetCourant.getArcs()){
 			  if(!setSommetsNonAtteints.contains(sommetFils)) continue;
