@@ -9,7 +9,11 @@ public class Main {
   private static Task task;
 
   public static void main(String[] args) {
+
+
+
     initialisationProgramme();
+    // task.affichage();
     char boucle;
     do {
       menuPrincipal();
@@ -36,6 +40,7 @@ public class Main {
 
   private static void plusCourt() {
     String sommetDepart;
+
     do {
       System.out.println("Veuillez entrer un sommet de départ :");
       sommetDepart = scanner.nextLine();
@@ -45,12 +50,15 @@ public class Main {
       System.out.println("Veuilliez entrer le sommet d'arrivée : ");
       sommetArrivee = scanner.nextLine();
     } while (!task.existe(sommetArrivee));
-    task.affichage();
+
+
+    task.algorithme(task.getSommetByString(sommetDepart), task.getSommetByString(sommetArrivee));
   }
 
   private static void initialisationProgramme() {
     task = new Task1();
     LireFichier lecture = new LireFichier(task);
     lecture.lectureFichier();
+
   }
 }

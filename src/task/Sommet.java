@@ -1,13 +1,14 @@
 package task;
+
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class Sommet {
 
-  private Set<Sommet> arcsSortants = new HashSet<Sommet>();
+  private List<Sommet> arcsSortants = new ArrayList<Sommet>();
   private PageWikipedia pageWiki;
-  
+
   public Sommet(PageWikipedia pageWiki) {
     super();
     this.pageWiki = pageWiki;
@@ -20,13 +21,13 @@ public class Sommet {
   public void setPageWiki(PageWikipedia pageWiki) {
     this.pageWiki = pageWiki;
   }
-  
+
   public boolean ajouterArc(Sommet sommet) {
     return this.arcsSortants.add(sommet);
   }
-  
-  public Set<Sommet> getArcs() {
-    return Collections.unmodifiableSet(this.arcsSortants);
+
+  public List<Sommet> getArcs() {
+    return Collections.unmodifiableList(this.arcsSortants);
   }
 
   @Override
@@ -52,8 +53,8 @@ public class Sommet {
     } else if (!pageWiki.equals(other.pageWiki))
       return false;
     return true;
-  } 
-  
-  
-  
+  }
+
+
+
 }
