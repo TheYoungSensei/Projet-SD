@@ -2,11 +2,9 @@ package task;
 
 import java.util.List;
 
-public interface Task {
+public interface Algorithme {
 
-  public abstract boolean putSommet(Sommet sommet);
-
-  public abstract boolean putTitre(Sommet sommet);
+  public abstract void putSommetInit(Sommet sommet);
 
   public abstract Sommet getSommet(Integer i);
 
@@ -17,4 +15,6 @@ public interface Task {
   public abstract void affichage();
 
   public abstract List<Sommet> algorithme(Sommet depart, Sommet Arrive);
+
+  public abstract int getPoidsTotal();
 }

@@ -1,13 +1,13 @@
 package task;
 
 public class PageWikipedia {
-  
+
 
   private int identifiantProjet;
   private int identifiantWikipedia;
   private int taille;
   private String titre;
-  
+
   public PageWikipedia(int identifiantProjet, int identifiantWikipedia, int taille, String titre) {
     super();
     this.identifiantProjet = identifiantProjet;
@@ -53,6 +53,6 @@ public class PageWikipedia {
       return false;
     return true;
   }
-  
-  
+
+
 }

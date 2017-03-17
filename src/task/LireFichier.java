@@ -1,17 +1,16 @@
 package task;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class LireFichier {
 
   private static String FICHIER = "WikipediaL.txt";
-  private Task task;
+  private Algorithme task;
   
   
 
-  public LireFichier(Task task) {
+  public LireFichier(Algorithme task) {
     super();
     this.task = task;
   }
@@ -36,8 +35,7 @@ public class LireFichier {
         }
         PageWikipedia pageWiki = new PageWikipedia(identifiantProjet, identifiantWikipedia, taille, titre);
         Sommet sommet = new Sommet(pageWiki);
-        task.putSommet(sommet);
-        task.putTitre(sommet);
+        task.putSommetInit(sommet);
       }
       for(int i = 0; i < m; i++) {
        String[] lien = br.readLine().split(" ");
