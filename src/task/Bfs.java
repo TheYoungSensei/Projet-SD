@@ -12,11 +12,8 @@ public class Bfs implements Algorithme {
   private int nombreNoeud;
 
   public void affichage() {
-    for (int i : sommets.keySet()) {
-      System.out.println(sommets.get(i).getPageWiki().getTitre());
-      for (Sommet som : sommets.get(i).getArcs()) {
-        System.out.println("Lien vers : " + som.getPageWiki().getTitre());
-      }
+    for (String i : titres.keySet()) {
+      System.out.println(i);
     }
   }
 
