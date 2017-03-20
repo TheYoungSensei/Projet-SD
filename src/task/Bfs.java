@@ -22,6 +22,7 @@ public class Bfs implements Algorithme {
     HashSet<Sommet> sommetsAtteints = new HashSet<Sommet>();
     LinkedList<Sommet> parcours = new LinkedList<Sommet>();
     LinkedList<Sommet> cheminARenvoyer = new LinkedList<Sommet>();
+    
     if (sommetDepart.equals(sommetArrivee)) {
       //System.out.println(sommetArrivee.getPageWiki().getTitre());
       cheminARenvoyer.add(sommetArrivee);
@@ -32,14 +33,12 @@ public class Bfs implements Algorithme {
     /* Debut du parcours de  l'arbre */
     NoeudArbreBsf noeudDepart = new NoeudArbreBsf(sommetDepart, null);
     noeudsArbres.put(sommetDepart, noeudDepart);
+    Sommet courant = sommetDepart;
     while (!parcours.isEmpty()) {
-      Sommet courant = parcours.poll();
-      sommetsAtteints.add(courant);
-      List<Sommet> sommetsSortant = courant.getArcs();
       // pour touts les sommet sortant non traités.
-      for (Sommet sommet : sommetsSortant) {
+      for (Sommet sommet : courant.getArcs()) {
         if (!sommetsAtteints.contains(sommet)) {
-          // je les ajoute dans la file et dans mon arbre des noeuds
+          // je les ajoute dans la file et dans mon arbre des noeud
           parcours.add(sommet);
           NoeudArbreBsf noeud = new NoeudArbreBsf(sommet, courant);
           noeudsArbres.put(sommet, noeud);
@@ -48,6 +47,8 @@ public class Bfs implements Algorithme {
             cheminARenvoyer = trouverCheminArbre(sommetArrivee, noeudsArbres);
           }
         }
+        courant = parcours.poll();
+        sommetsAtteints.add(courant);
       }
     }
     return cheminARenvoyer;

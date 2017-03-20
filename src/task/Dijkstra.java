@@ -137,37 +137,33 @@ public class Dijkstra implements Algorithme {
   @Override
   public List<Sommet> algorithme(Sommet depart, Sommet Arrive) {
     setSommetDepart(depart);
+    System.out.println("Test");
     setSommetArrivee(Arrive);
+    System.out.println("Test2");
     Sommet sommetCourant = this.sommetDepart;
     setSommetsNonAtteints.remove(sommetCourant);
     modifyPoids(sommetCourant, 0, hashSommetPoids.get(sommetCourant));
-    for (Sommet sommetFils : sommetCourant.getArcs()) {
-      if (!setSommetsNonAtteints.contains(sommetFils))
-        continue;
-      if (hashSommetPoids.get(sommetCourant)
-          + sommetFils.getPageWiki().getTaille() < hashSommetPoids.get(sommetFils)
-          || hashSommetPoids.get(sommetFils) == Integer.MAX_VALUE - 1) {
-        modifyPoids(sommetFils,
-            hashSommetPoids.get(sommetCourant) + sommetFils.getPageWiki().getTaille(),
-            hashSommetPoids.get(sommetFils));
-        hashAntecedents.put(sommetFils, sommetCourant);
-      }
-    }
+    System.out.println("Init");
+    System.out.println("Launching app");
     while (!sommetCourant.equals(sommetArrivee) && !setSommetsNonAtteints.isEmpty()) {
+      System.out.println("Sommet : " + sommetCourant.getPageWiki().getTitre());
       sommetCourant = sommetPoidsPlusFaibleNonParcouru();
       if (sommetCourant == null) {
         return null;
       }
       for (Sommet sommetFils : sommetCourant.getArcs()) {
+        System.out.println("Sommet bis : " + sommetFils);
         if (!setSommetsNonAtteints.contains(sommetFils))
           continue;
         if (hashSommetPoids.get(sommetCourant)
             + sommetFils.getPageWiki().getTaille() < hashSommetPoids.get(sommetFils)
             || hashSommetPoids.get(sommetFils) == Integer.MAX_VALUE - 1) {
+          System.out.println("Before modify");
           modifyPoids(sommetFils,
               hashSommetPoids.get(sommetCourant) + sommetFils.getPageWiki().getTaille(),
               hashSommetPoids.get(sommetFils));
           hashAntecedents.put(sommetFils, sommetCourant);
+          System.out.println("fter modify");
         }
       }
     }
