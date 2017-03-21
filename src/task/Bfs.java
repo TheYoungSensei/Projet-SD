@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Bfs implements Algorithme {
 
@@ -18,10 +19,10 @@ public class Bfs implements Algorithme {
   }
 
   public List<Sommet> algorithme(Sommet sommetDepart, Sommet sommetArrivee) {
-    HashMap<Sommet, NoeudArbreBsf> noeudsArbres = new HashMap<Sommet, NoeudArbreBsf>();
     HashSet<Sommet> sommetsAtteints = new HashSet<Sommet>();
     LinkedList<Sommet> parcours = new LinkedList<Sommet>();
-    LinkedList<Sommet> cheminARenvoyer = new LinkedList<Sommet>();
+    List<Sommet> cheminARenvoyer = new LinkedList<Sommet>();
+    Map<Sommet, Sommet> ancetres = new HashMap<Sommet, Sommet>();
     
     if (sommetDepart.equals(sommetArrivee)) {
       //System.out.println(sommetArrivee.getPageWiki().getTitre());
@@ -31,8 +32,6 @@ public class Bfs implements Algorithme {
     }
     parcours.add(sommetDepart);
     /* Debut du parcours de  l'arbre */
-    NoeudArbreBsf noeudDepart = new NoeudArbreBsf(sommetDepart, null);
-    noeudsArbres.put(sommetDepart, noeudDepart);
     Sommet courant = sommetDepart;
     while (!parcours.isEmpty()) {
       // pour touts les sommet sortant non traités.
@@ -40,30 +39,29 @@ public class Bfs implements Algorithme {
         if (!sommetsAtteints.contains(sommet)) {
           // je les ajoute dans la file et dans mon arbre des noeud
           parcours.add(sommet);
-          NoeudArbreBsf noeud = new NoeudArbreBsf(sommet, courant);
-          noeudsArbres.put(sommet, noeud);
+          ancetres.put(sommet, courant);
           // si le sommet d'arrive est atteint
          if (sommet.equals(sommetArrivee)) {
-            cheminARenvoyer = trouverCheminArbre(sommetArrivee, noeudsArbres);
+            courant = sommet;
+            return trouverCheminArbre(sommetArrivee, ancetres);
           }
         }
-        courant = parcours.poll();
-        sommetsAtteints.add(courant);
       }
+      courant = parcours.poll();
+      sommetsAtteints.add(courant);
     }
-    return cheminARenvoyer;
+    return trouverCheminArbre(sommetArrivee, ancetres);
   }
 
   private LinkedList<Sommet> trouverCheminArbre(Sommet sommetArrivee,
-      HashMap<Sommet, NoeudArbreBsf> noeudsArbres) {
+      Map<Sommet, Sommet> ancetres) {
     LinkedList<Sommet> chemin = new LinkedList<Sommet>();
-    NoeudArbreBsf noeud = noeudsArbres.get(sommetArrivee);
+    Sommet sommet = sommetArrivee;
     this.nombreNoeud = 0;
-    while (noeud != null) {
+    while (sommet != null) {
       this.nombreNoeud++;
-      chemin.push(noeud.getSommet());
-      Sommet parent = noeud.getParent();
-      noeud = noeudsArbres.get(parent);
+      chemin.push(sommet);
+      sommet = ancetres.get(sommet);
     }
     return chemin;
   }
@@ -84,24 +82,6 @@ public class Bfs implements Algorithme {
   public Sommet getSommetByString(String titre) {
 
     return this.titres.get(titre);
-  }
-
-  private class NoeudArbreBsf {
-    private Sommet sommet;
-    private Sommet parent;
-
-    public NoeudArbreBsf(Sommet sommet, Sommet parent) {
-      this.sommet = sommet;
-      this.parent = parent;
-    }
-
-    public Sommet getSommet() {
-      return sommet;
-    }
-
-    public Sommet getParent() {
-      return parent;
-    }
   }
 
   @Override
