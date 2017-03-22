@@ -13,8 +13,8 @@ public class DijkstraV2 implements Algorithme {
 	private Map<Sommet, Sommet> antecedents = new HashMap<Sommet, Sommet>();
 	private Map<Integer, Sommet> ids = new HashMap<Integer, Sommet>();
 
-	private SortedMap<Sommet, Integer> etiquettesProvisoires = new TreeMap<Sommet, Integer>();
-	private SortedMap<Sommet, Integer> etiquettesDefinitives = new TreeMap<Sommet, Integer>();
+	private SortedMap<Sommet, Integer> etiquettesProvisoires;
+	private SortedMap<Sommet, Integer> etiquettesDefinitives;
 
 	private int poidsTotal;
 
@@ -49,10 +49,9 @@ public class DijkstraV2 implements Algorithme {
 
 	@Override
 	public List<Sommet> algorithme(Sommet depart, Sommet arrive) {
-		etiquettesProvisoires = new TreeMap<Sommet, Integer>(
-				(s1, s2) -> s1.getPoids() - s2.getPoids());
-		etiquettesDefinitives = new TreeMap<Sommet, Integer>(
-				(s1, s2) -> s1.getPoids() - s2.getPoids());
+		etiquettesProvisoires = new TreeMap<Sommet, Integer>();
+		etiquettesDefinitives = new TreeMap<Sommet, Integer>();
+		
 		this.poidsTotal = 0;
 		Sommet courant = depart;
 		courant.setPoids(0);
@@ -65,21 +64,12 @@ public class DijkstraV2 implements Algorithme {
 							s.setPoids(etiquettesDefinitives.get(courant) + s.getPageWiki().getTaille());
 							this.etiquettesProvisoires.put(s, etiquettesDefinitives.get(courant) + s.getPageWiki().getTaille());
 							this.antecedents.put(s, courant);
-							if(s.getPageWiki().getTitre().equals("Java"))
-								System.out.println("JAVAAAAAAAAAA MODIIFFFFFF");
 						}
 					} else {
 						s.setPoids(this.etiquettesDefinitives.get(courant) + s.getPageWiki().getTaille());
 						this.etiquettesProvisoires.put(s, (etiquettesDefinitives.get(courant) + s.getPageWiki().getTaille()));
 						this.antecedents.put(s, courant);
-						if(s.getPageWiki().getTitre().equals("Java")){
-							System.out.println("JAVAAAAAA PROVISOIRE");
-							affichageEtiquettes();
-						}
 					}
-				} else {
-					if(s.getPageWiki().getTitre().equals("Java"))
-						System.out.println("JAVAAAAAAAAAA DEFINITIF");
 				}
 			}
 			if(etiquettesProvisoires.isEmpty()){
