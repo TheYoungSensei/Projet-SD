@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class LireFichier {
 
-	private static String FICHIER = "2016-IPL-2BIN-I202B-wgraph3.txt";
+	private static String FICHIER = "WikipediaW.txt";
 	private Algorithme task;
 	private int nombrePages;
 
