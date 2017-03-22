@@ -8,13 +8,23 @@ public class Sommet {
 
   private List<Sommet> arcsSortants = new ArrayList<Sommet>();
   private PageWikipedia pageWiki;
+  private int poids;
 
   public Sommet(PageWikipedia pageWiki) {
     super();
+    this.poids=-1;
     this.pageWiki = pageWiki;
   }
 
-  public PageWikipedia getPageWiki() {
+  public int getPoids() {
+	return poids;
+}
+  
+public void setPoids(int newPoids) {
+	this.poids = newPoids;
+}
+
+public PageWikipedia getPageWiki() {
     return pageWiki;
   }
 
