@@ -1,10 +1,12 @@
 package task;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Bfs implements Algorithme {
 
@@ -19,36 +21,25 @@ public class Bfs implements Algorithme {
   }
 
   public List<Sommet> algorithme(Sommet sommetDepart, Sommet sommetArrivee) {
-    HashSet<Sommet> sommetsAtteints = new HashSet<Sommet>();
-    LinkedList<Sommet> parcours = new LinkedList<Sommet>();
-    List<Sommet> cheminARenvoyer = new LinkedList<Sommet>();
+    this.nombreNoeud = 0;
+    LinkedList<Sommet> mesSommets = new LinkedList<Sommet>();
+    Set<Sommet> tousMesSommets = new HashSet<Sommet>();
     Map<Sommet, Sommet> ancetres = new HashMap<Sommet, Sommet>();
-    
-    if (sommetDepart.equals(sommetArrivee)) {
-      //System.out.println(sommetArrivee.getPageWiki().getTitre());
-      cheminARenvoyer.add(sommetArrivee);
-      this.nombreNoeud = 1;
-      return cheminARenvoyer;
-    }
-    parcours.add(sommetDepart);
-    /* Debut du parcours de  l'arbre */
     Sommet courant = sommetDepart;
-    while (!parcours.isEmpty()) {
-      // pour touts les sommet sortant non traités.
+    tousMesSommets.add(courant);
+    while (!courant.equals(sommetArrivee)) {
       for (Sommet sommet : courant.getArcs()) {
-        if (!sommetsAtteints.contains(sommet)) {
-          // je les ajoute dans la file et dans mon arbre des noeud
-          parcours.add(sommet);
+        if (!tousMesSommets.contains(sommet)) {
           ancetres.put(sommet, courant);
-          // si le sommet d'arrive est atteint
-         if (sommet.equals(sommetArrivee)) {
-            courant = sommet;
-            return trouverCheminArbre(sommetArrivee, ancetres);
-          }
+          mesSommets.add(sommet);
+          tousMesSommets.add(sommet);
         }
       }
-      courant = parcours.poll();
-      sommetsAtteints.add(courant);
+      if (mesSommets.isEmpty())
+        return new LinkedList<Sommet>();
+      courant = mesSommets.pollFirst();
+      if (courant == null)
+        return new LinkedList<Sommet>();
     }
     return trouverCheminArbre(sommetArrivee, ancetres);
   }
@@ -57,7 +48,6 @@ public class Bfs implements Algorithme {
       Map<Sommet, Sommet> ancetres) {
     LinkedList<Sommet> chemin = new LinkedList<Sommet>();
     Sommet sommet = sommetArrivee;
-    this.nombreNoeud = 0;
     while (sommet != null) {
       this.nombreNoeud++;
       chemin.push(sommet);

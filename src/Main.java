@@ -19,7 +19,7 @@ public class Main {
     initialisationProgramme();
     System.out.println("Le fichier a pris : "
         + (System.currentTimeMillis() - tempsChargementFichier) + " millisecondes à se charger!");
-    test();
+    //test();
     char boucle;
     do {
       scanner = new java.util.Scanner(System.in);
@@ -56,10 +56,14 @@ public class Main {
     long tempsRequete = System.currentTimeMillis();
     List<Sommet> chemin =
         bfs.algorithme(bfs.getSommetByString(sommetDepart), bfs.getSommetByString(sommetArrivee));
-    affichageChemin(chemin);
-    System.out.println("Le chemin est constitué de " + bfs.getPoidsTotal() + " page(s)");
-    System.out.println(
-        "La requête à pris :  " + (System.currentTimeMillis() - tempsRequete) + " millisecondes a s'exécuter");
+    if (chemin.isEmpty()) {
+      System.out.println("Aucun chemin entre les deux pages !");
+    } else {
+      affichageChemin(chemin);
+      System.out.println("Le chemin est constitué de " + bfs.getPoidsTotal() + " page(s)");
+    }
+    System.out.println("La requête à pris :  " + (System.currentTimeMillis() - tempsRequete)
+        + " millisecondes a s'exécuter");
   }
 
   private static String getStringSommet(String message) {
@@ -67,7 +71,7 @@ public class Main {
     do {
       System.out.println(message);
       sommet = scanner.nextLine();
-    } while (!bfs.existe(sommet)); 
+    } while (!bfs.existe(sommet));
     return sommet;
   }
 
@@ -84,7 +88,8 @@ public class Main {
       System.out.println(
           "Il vous a fallu : " + dijkstra.getPoidsTotal() + " kb pour effectuer cette recherche");
     }
-    System.out.println("La requête à pris :  " + (System.currentTimeMillis() - tempsRequete) + " millisecondes a s'exécuter");
+    System.out.println("La requête à pris :  " + (System.currentTimeMillis() - tempsRequete)
+        + " millisecondes a s'exécuter");
 
   }
 
@@ -105,15 +110,14 @@ public class Main {
 
   private static void test() {
     long tempsChargementFichier = System.currentTimeMillis();
-    for (int i = 0; i < 50; i++) {
-      long temps = System.currentTimeMillis();
-      affichageChemin(dijkstra.algorithme(
-          dijkstra.getSommet((int) (Math.random() * (lectureDijkstra.getNombrePages()))),
-          dijkstra.getSommet((int) (Math.random() * (lectureDijkstra.getNombrePages())))));
-      System.out.println(
-          "Temps en mili : " + (System.currentTimeMillis() - temps) + " Fin de l'itération N°" + i);
-    }
-    for (int i = 0; i < 5; i++) {
+    /*
+     * for (int i = 0; i < 50; i++) { long temps = System.currentTimeMillis();
+     * affichageChemin(dijkstra.algorithme( dijkstra.getSommet((int) (Math.random() *
+     * (lectureDijkstra.getNombrePages()))), dijkstra.getSommet((int) (Math.random() *
+     * (lectureDijkstra.getNombrePages()))))); System.out.println( "Temps en mili : " +
+     * (System.currentTimeMillis() - temps) + " Fin de l'itération N°" + i); }
+     */
+    for (int i = 0; i < 10; i++) {
       long temps = System.currentTimeMillis();
       affichageChemin(
           bfs.algorithme(bfs.getSommet((int) (Math.random() * (lectureDijkstra.getNombrePages()))),
