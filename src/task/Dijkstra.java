@@ -1,179 +1,124 @@
 package task;
 
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class Dijkstra implements Algorithme {
-	
-	private TreeMap<Integer, LinkedList<Sommet>> hashPoidsSommets = new TreeMap<Integer, LinkedList<Sommet>>((i1, i2) -> i1 - i2);
-	private HashSet<Sommet> setSommetsAtteints = new HashSet<Sommet>();
 
-	private HashMap<Sommet, Integer> hashSommetPoids = new HashMap<Sommet, Integer>();
-	private HashMap<String, Sommet> hashTitres = new HashMap<String, Sommet>();
-	private HashMap<Sommet, Sommet> hashAntecedents = new HashMap<Sommet, Sommet>();
-	private HashMap<Integer, Sommet> hashSommetId = new HashMap<Integer, Sommet>();
+  private Map<String, Sommet> titres = new HashMap<String, Sommet>();
+  private Map<Sommet, Sommet> antecedents = new HashMap<Sommet, Sommet>();
+  private Map<Integer, Sommet> ids = new HashMap<Integer, Sommet>();
 
-	private Sommet sommetDepart;
-	private Sommet sommetArrivee;
+  private SortedMap<Sommet, Integer> etiquettesProvisoires;
+  private SortedMap<Sommet, Integer> etiquettesDefinitives;
+  
+  private Comparator comparator = new Comparator<Sommet>(){  
+    @Override
+    public int compare(Sommet s1, Sommet s2) {
+      int difference = s1.getPoids() - s2.getPoids();
+      if(difference != 0) {
+        return difference;
+      } else {
+        return s1.getPageWiki().getIdentifiantProjet() - s2.getPageWiki().getIdentifiantProjet();
+      }
+    }
+  };
 
-	private int poidsTotal;
+  private int poidsTotal;
 
-	public int getPoidsTotal() {
-		return poidsTotal;
-	}
+  public int getPoidsTotal() {
+    return poidsTotal;
+  }
 
-	public void affichage() {
-		for (Sommet sommet : hashTitres.values()) {
-			System.out.println(sommet.getPageWiki().getTitre());
-			for (Sommet som : sommet.getArcs()) {
-				System.out.println("Lien vers : " + som.getPageWiki().getTitre());
-			}
-		}
-	}
+  public void affichage() {
+    for (Sommet sommet : titres.values()) {
+      System.out.println(sommet.getPageWiki().getTitre());
+      for (Sommet som : sommet.getArcs()) {
+        System.out.println("Lien vers : " + som.getPageWiki().getTitre());
+      }
+    }
+  }
 
-	private Sommet sommetPoidsPlusFaibleNonParcouru() {
-		LinkedList<Sommet> sommets = this.hashPoidsSommets.firstEntry().getValue();
-		Sommet s = sommets.poll();
-		if (sommets.isEmpty())
-			this.hashPoidsSommets.pollFirstEntry();
-		this.setSommetsAtteints.add(s);
-		return s;
-	}
+  @Override
+  public void putSommetInit(Sommet sommet) {
+    this.titres.put(sommet.getPageWiki().getTitre(), sommet);
+    this.ids.put(sommet.getPageWiki().getIdentifiantProjet(), sommet);
+  }
 
-	public boolean setSommetDepart(Sommet s) {
-		if (!this.hashSommetPoids.containsKey(s))
-			return false;
-		this.sommetDepart = s;
-		return true;
-	}
+  @Override
+  public Sommet getSommetByString(String titre) {
+    return this.titres.get(titre);
+  }
 
-	public boolean setSommetArrivee(Sommet s) {
-		if (!this.hashSommetPoids.containsKey(s))
-			return false;
-		this.sommetArrivee = s;
-		return true;
-	}
+  @Override
+  public boolean existe(String s) {
+    return titres.containsKey(s);
+  }
 
-	private void putSommetInHashAntecedents(Sommet sommetCourant, Sommet sommetAntecedent) {
-		this.hashAntecedents.put(sommetCourant, sommetAntecedent);
+  @Override
+  public List<Sommet> algorithme(Sommet depart, Sommet arrive) {
+    etiquettesProvisoires = new TreeMap<Sommet, Integer>(comparator);
+    etiquettesDefinitives = new TreeMap<Sommet, Integer>(comparator);
 
-	}
+    this.poidsTotal = 0;
+    Sommet courant = depart;
+    courant.setPoids(0);
+    this.etiquettesDefinitives.put(courant, 0);
+    while (!courant.equals(arrive)) {
+      for (Sommet s : courant.getArcs()) {
+        if(s == null) {
+          return new LinkedList<Sommet>();
+        }
+        if (!etiquettesDefinitives.containsKey(s)) {
+          if (etiquettesProvisoires.containsKey(s)) {
+            if (etiquettesProvisoires.get(s) > etiquettesDefinitives.get(courant)
+                + s.getPageWiki().getTaille()) {
+              s.setPoids(etiquettesDefinitives.get(courant) + s.getPageWiki().getTaille());
+              this.etiquettesProvisoires.put(s,
+                  etiquettesDefinitives.get(courant) + s.getPageWiki().getTaille());
+              this.antecedents.put(s, courant);
+            }
+          } else {
+            s.setPoids(this.etiquettesDefinitives.get(courant) + s.getPageWiki().getTaille());
+            this.etiquettesProvisoires.put(s,
+                (etiquettesDefinitives.get(courant) + s.getPageWiki().getTaille()));
+            this.antecedents.put(s, courant);
+          }
+        }
+      }
+      if (etiquettesProvisoires.isEmpty()) {
+        return new LinkedList<Sommet>();
+      }
+      courant = etiquettesProvisoires.firstKey();
+      this.etiquettesDefinitives.put(courant, this.etiquettesProvisoires.get(courant));
+      etiquettesProvisoires.remove(courant);
+    }
+    LinkedList<Sommet> chemin = new LinkedList<Sommet>();
+    Sommet etape = arrive;
+    while (!etape.equals(depart)) {
+      this.poidsTotal += etape.getPageWiki().getTaille();
+      chemin.push(etape);
+      etape = antecedents.get(etape);
+    }
+    chemin.push(depart);
+    return chemin;
+  }
 
-	private void putSommetInHashPoidsSommets(Sommet sommet, int newPoids, int oldPoids) {
-		if (this.hashPoidsSommets.containsKey(oldPoids)) {
-			LinkedList<Sommet> l = hashPoidsSommets.get(oldPoids);
-			l.remove(sommet);
-			if (l.isEmpty())
-				hashPoidsSommets.remove(oldPoids);
-		}
-		if (this.hashPoidsSommets.containsKey(newPoids)) {
-			this.hashPoidsSommets.get(newPoids).add(sommet);
-		} else {
-			LinkedList<Sommet> liste = new LinkedList<Sommet>();
-			liste.add(sommet);
-			this.hashPoidsSommets.put(newPoids, liste);
-		}
-	}
+  public void affichageEtiquettes() {
+    for (Sommet s : this.etiquettesDefinitives.keySet()) {
+      if (s.getPageWiki().getTitre().equals("Java"))
+        System.out.println(s.getPageWiki().getTitre());
+    }
+  }
 
-	private void modifyPoids(Sommet sommet, int newPoids, int oldPoids) {
-		putSommetInHashPoidsSommets(sommet, newPoids, oldPoids);
-		putSommetInHashSommetPoids(sommet, newPoids);
-	}
-
-	private void putSommetInHashSommetPoids(Sommet sommet, int poids) {
-		this.hashSommetPoids.put(sommet, poids);
-	}
-
-	private void putSommetInHashTitre(Sommet sommet) {
-		this.hashTitres.put(sommet.getPageWiki().getTitre(), sommet);
-	}
-
-	private void putSommetInHashSommetId(Sommet sommet) {
-		this.hashSommetId.put(sommet.getPageWiki().getIdentifiantProjet(), sommet);
-	}
-
-	public void putSommetInit(Sommet sommet) {
-		putSommetInHashAntecedents(sommet, null);
-		modifyPoids(sommet, Integer.MAX_VALUE - 1, Integer.MAX_VALUE);
-		putSommetInHashTitre(sommet);
-		putSommetInHashSommetId(sommet);
-	}
-
-	@Override
-	public Sommet getSommet(Integer i) {
-		if (!this.hashSommetId.containsKey(i))
-			return null;
-		else
-			return this.hashSommetId.get(i);
-	}
-
-	@Override
-	public Sommet getSommetByString(String titre) {
-		if (!this.hashTitres.containsKey(titre))
-			return null;
-		else
-			return this.hashTitres.get(titre);
-	}
-
-	@Override
-	public boolean existe(String s) {
-		return this.hashTitres.containsKey(s);
-	}
-
-	@Override
-	public List<Sommet> algorithme(Sommet depart, Sommet Arrive) {
-		setSommetDepart(depart);
-		setSommetArrivee(Arrive);
-		Sommet sommetCourant = this.sommetDepart;
-		setSommetsAtteints.add(sommetCourant);
-		modifyPoids(sommetCourant, 0, hashSommetPoids.get(sommetCourant));
-		while (!sommetCourant.equals(sommetArrivee)) {
-			for (Sommet sommetFils : sommetCourant.getArcs()) {
-				if (!setSommetsAtteints.contains(sommetFils)) {
-					if (sommetFils.equals(Arrive)) {
-						modifyPoids(sommetFils,
-								hashSommetPoids.get(sommetCourant) + sommetFils.getPageWiki().getTaille(),
-								hashSommetPoids.get(sommetFils));
-						hashAntecedents.put(sommetFils, sommetCourant);
-						sommetCourant = sommetFils;
-						return trouverChemin(sommetCourant);
-					}
-					if (hashSommetPoids.get(sommetCourant) + sommetFils.getPageWiki().getTaille() < hashSommetPoids
-							.get(sommetFils) || hashSommetPoids.get(sommetFils) == Integer.MAX_VALUE - 1) {
-						modifyPoids(sommetFils,
-								hashSommetPoids.get(sommetCourant) + sommetFils.getPageWiki().getTaille(),
-								hashSommetPoids.get(sommetFils));
-						hashAntecedents.put(sommetFils, sommetCourant);
-					}
-				}
-			}
-			sommetCourant = sommetPoidsPlusFaibleNonParcouru();
-			if (sommetCourant == null) {
-				return new LinkedList<Sommet>();
-			}
-		}
-		if (!sommetCourant.equals(sommetArrivee))
-			return new LinkedList<Sommet>();
-		else {
-			return trouverChemin(sommetCourant);
-		}
-	}
-
-	private List<Sommet> trouverChemin(Sommet sommetCourant) {
-		this.poidsTotal = hashSommetPoids.get(sommetCourant);
-		LinkedList<Sommet> cheminTemp = new LinkedList<Sommet>();
-		cheminTemp.push(sommetCourant);
-		while (!sommetCourant.equals(sommetDepart)) {
-			if (hashAntecedents.get(sommetCourant) == null) {
-				return null;
-			}
-			sommetCourant = hashAntecedents.get(sommetCourant);
-			cheminTemp.push(sommetCourant);
-		}
-		return cheminTemp;
-	}
+  @Override
+  public Sommet getSommet(Integer i) {
+    return ids.get(i);
+  }
 
 }

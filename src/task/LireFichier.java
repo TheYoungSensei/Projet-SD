@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class LireFichier {
 
-	private static String FICHIER = "WikipediaW.txt";
+	private static String FICHIER = "WikipediaL.txt";
 	private Algorithme task;
 	private int nombrePages;
 

@@ -2,7 +2,7 @@ import java.util.List;
 
 import task.Algorithme;
 import task.Bfs;
-import task.DijkstraV2;
+import task.Dijkstra;
 import task.LireFichier;
 import task.Sommet;
 import util.Util;
@@ -103,7 +103,7 @@ public class Main {
     bfs = new Bfs();
     LireFichier lectureBfs = new LireFichier(bfs);
     lectureBfs.lectureFichier();
-    dijkstra = new DijkstraV2();
+    dijkstra = new Dijkstra();
     lectureDijkstra = new LireFichier(dijkstra);
     lectureDijkstra.lectureFichier();
   }
